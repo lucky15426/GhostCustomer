@@ -1,0 +1,52 @@
+# ============================================================================
+# Build-context excludes for the Next.js web image (Dockerfile at repo root).
+# Keep the context lean: deps are installed inside the image, and build
+# artifacts / local env / VCS metadata must never leak into the layers.
+# ============================================================================
+
+# Node / Next.js
+node_modules
+.next
+out
+build
+next-env.d.ts
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Env / secrets (never bake into the image; pass via env_file / --env-file)
+.env
+.env*.local
+.env.local
+
+# VCS / editor / OS cruft
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel
+
+# Docker (no need to copy these into the context)
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Python engine — built by its own image (agents-py/Dockerfile), excluded here
+agents-py/.venv
+agents-py/__pycache__
+agents-py/**/__pycache__
+agents-py/*.egg-info
+agents-py/.env
+agents-py/.env.local
+**/*.pyc
+
+# Docs that don't belong in the runtime image
+README.md
+docs

@@ -1,0 +1,55 @@
+# ============================================================================
+# Ghost Customer AI — local stack (web + python engine)
+#
+#   docker compose up --build
+#     web    -> http://localhost:3000   (Next.js 15 frontend)
+#     engine -> http://localhost:8000   (FastAPI + LangGraph 8-agent pipeline)
+#
+# RUNS FULLY OFFLINE WITH NO KEYS. The env_files below are OPTIONAL — if
+# .env.local / agents-py/.env are absent or empty, both services fall back to
+# the deterministic seeded mock engine and the entire demo still works end to
+# end (analysis, personas, simulation swarm, insights, report). Add a free
+# GEMINI_API_KEY / FIRECRAWL_API_KEY later for "real" analysis.
+# ============================================================================
+
+services:
+  # --- Python engine: the 8-agent pipeline ---------------------------------
+  engine:
+    build: ./agents-py
+    ports:
+      - "8000:8000"
+    # Optional: copy agents-py/.env.example -> agents-py/.env to add keys.
+    # `required: false` -> missing file is fine; engine runs on the mock engine.
+    env_file:
+      - path: agents-py/.env
+        required: false
+    environment:
+      - PORT=8000
+    healthcheck:
+      # GET /health returns {ok, engine, gemini, firecrawl}; no keys required.
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+  # --- Next.js 15 web frontend ---------------------------------------------
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      engine:
+        condition: service_started
+    # Optional: copy .env.example -> .env.local to add keys.
+    # `required: false` -> missing file is fine; frontend runs on the mock engine.
+    env_file:
+      - path: .env.local
+        required: false
+    environment:
+      # Route runs through the in-cluster engine (overrides any value in
+      # .env.local). Service name "engine" resolves via the compose network.
+      - PYTHON_ENGINE_URL=http://engine:8000
+      - NODE_ENV=production
+    restart: unless-stopped

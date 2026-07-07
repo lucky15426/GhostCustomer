@@ -1,0 +1,484 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mainframe-style hero fonts + typewriter cursor */
+:root {
+  --font-heading: 'HelveticaNowDisplay-Medium', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'HelveticaNowDisplayW01-Rg', 'Helvetica Neue', Arial, sans-serif;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
+   Black Graphite design system
+   Layered graphite surfaces, silver typography, signal-colour accents only.
+   Inspired by Linear / Apple Vision Pro / Palantir.
+   ============================================================================ */
+
+@layer base {
+  :root {
+    /* Light / white minimal theme (matches the Mainframe hero) */
+    --background: 240 20% 99%;
+    /* near-white */
+    --foreground: 240 10% 6%;
+    /* near-black */
+    --card: 0 0% 100%;
+    /* white surface */
+    --card-foreground: 240 10% 8%;
+    --primary: 240 10% 10%;
+    /* near-black primary (black buttons) */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 10% 96%;
+    --secondary-foreground: 240 10% 12%;
+    --muted: 240 10% 96%;
+    --muted-foreground: 240 5% 44%;
+    /* mid grey */
+    --accent: 240 10% 94%;
+    --accent-foreground: 240 10% 10%;
+    --border: 240 8% 90%;
+    --input: 240 8% 88%;
+    --ring: 240 6% 60%;
+    --radius: 1.25rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    overflow-x: hidden;
+    background-color: #fbfbfd;
+    background-image:
+      radial-gradient(48rem 48rem at 12% -12%, rgba(124, 58, 237, 0.05), transparent 55%),
+      radial-gradient(40rem 40rem at 96% 0%, rgba(99, 102, 241, 0.04), transparent 55%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgba(124, 58, 237, 0.18);
+    color: #0f172a;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+
+  /* frosted white glass */
+  .glass {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.6));
+    @apply border border-black/[0.06] backdrop-blur-xl;
+  }
+
+  .glass-strong {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+    @apply border border-black/[0.08] backdrop-blur-2xl;
+  }
+
+  /* ink text gradient */
+  .gradient-text {
+    @apply bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 bg-clip-text text-transparent;
+    background-size: 200% auto;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 32px rgba(124, 58, 237, 0.18);
+  }
+
+  .card-glow {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 24px 60px -34px rgba(30, 20, 70, 0.18);
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* static silver hairline border */
+  .ring-border {
+    position: relative;
+  }
+
+  .ring-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04) 60%, transparent);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* slow silver glint that rotates round a surface */
+  .conic-border {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .conic-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(from var(--angle, 0deg),
+        transparent 0deg,
+        rgba(255, 255, 255, 0.55) 60deg,
+        rgba(255, 255, 255, 0.08) 130deg,
+        transparent 210deg,
+        transparent 360deg);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: spin-angle 9s linear infinite;
+    z-index: -1;
+  }
+
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.22) 50%, transparent 70%);
+    transform: translateX(-130%);
+    transition: transform 0.7s ease;
+  }
+
+  .shimmer:hover::after {
+    transform: translateX(130%);
+  }
+
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+  }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spin-angle {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-slow-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes scan-line {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(2000%);
+  }
+}
+
+@keyframes ambient-drift {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: translate3d(3%, -2%, 0) scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+.anim-spin-slow {
+  animation: spin-slow 22s linear infinite;
+}
+
+.anim-spin-slow-rev {
+  animation: spin-slow-rev 30s linear infinite;
+}
+
+.anim-glow-pulse {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+/* grain overlay */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(240 6% 80%);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(240 6% 68%);
+  background-clip: content-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .print-card {
+    border: 1px solid #e5e7eb !important;
+    background: white !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+}
+
+/* ============================================================================
+   Light SaaS Landing Page Theme Override
+   ============================================================================ */
+
+.landing-page-theme {
+  --background: 240 10% 98%;
+  --foreground: 240 10% 4%;
+  color: #0F172A;
+}
+
+/* Base text elements */
+.landing-page-theme h1,
+.landing-page-theme h2,
+.landing-page-theme h3,
+.landing-page-theme h4,
+.landing-page-theme h5 {
+  color: #0F172A !important;
+}
+
+.landing-page-theme p,
+.landing-page-theme span,
+.landing-page-theme li {
+  color: #475569;
+}
+
+/* Explicit class overrides */
+.landing-page-theme .text-white {
+  color: #0F172A !important;
+}
+
+.landing-page-theme .text-zinc-200 {
+  color: #1E293B !important;
+}
+
+.landing-page-theme .text-zinc-300,
+.landing-page-theme .text-zinc-400,
+.landing-page-theme .text-muted-foreground {
+  color: #475569 !important;
+}
+
+/* Sections specific background and borders */
+.landing-page-theme section {
+  background-color: transparent !important;
+  border-color: rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Glass card overrides */
+.landing-page-theme .glass {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(99, 102, 241, 0.08) !important;
+  box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+  backdrop-filter: blur(16px);
+}
+
+.landing-page-theme .glass:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(99, 102, 241, 0.15) !important;
+  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.08), 0 1px 5px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Differentiator custom styling */
+.landing-page-theme .border-ghost-rose\/20 {
+  border-color: rgba(244, 63, 94, 0.15) !important;
+  background-color: rgba(244, 63, 94, 0.03) !important;
+}
+.landing-page-theme .text-ghost-rose {
+  color: #E11D48 !important;
+}
+.landing-page-theme .border-ghost-emerald\/20 {
+  border-color: rgba(16, 185, 129, 0.15) !important;
+  background-color: rgba(16, 185, 129, 0.03) !important;
+}
+.landing-page-theme .text-ghost-emerald {
+  color: #059669 !important;
+}
+
+/* Features page icons */
+.landing-page-theme .bg-white\/\[0\.04\] {
+  background-color: rgba(15, 23, 42, 0.04) !important;
+  border-color: rgba(15, 23, 42, 0.06) !important;
+  color: #334155 !important;
+}
+
+.landing-page-theme .group:hover .bg-white\/\[0\.04\] {
+  background-color: rgba(99, 102, 241, 0.1) !important;
+  border-color: rgba(99, 102, 241, 0.2) !important;
+  color: #4F46E5 !important;
+}
+
+/* CTA Card */
+.landing-page-theme .from-ghost-violet\/20 {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(99, 102, 241, 0.05) 50%, rgba(6, 182, 212, 0.06) 100%) !important;
+  border-color: rgba(99, 102, 241, 0.1) !important;
+  box-shadow: 0 30px 60px -20px rgba(99, 102, 241, 0.12) !important;
+}
+
+.landing-page-theme .from-ghost-violet\/20 h2 {
+  color: #0F172A !important;
+}
+
+/* Light grid background */
+.grid-bg-light {
+  background-image:
+    linear-gradient(to right, rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ============================================================================
+   Insights dashboard — warm "Liquid Glass" surfaces
+   Apple HIG + Stripe + Linear: calm, warm grey, ceramic panels, soft glass.
+   ============================================================================ */
+@layer components {
+
+  /* Liquid glass — top nav, KPI chips, filters, tabs, floating + AI buttons.
+     Restrained: ~0.4 opacity white, gentle blur, 1px inner highlight, soft shadow. */
+  .glass-lg {
+    background: rgba(255, 255, 255, 0.42);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.75),
+      0 1px 2px rgba(40, 38, 52, 0.04),
+      0 12px 34px -20px rgba(40, 38, 52, 0.26);
+  }
+
+  /* Polished ceramic panel — cards that almost melt into the warm background. */
+  .ceramic {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(252, 251, 249, 0.82));
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.85),
+      0 1px 2px rgba(40, 38, 52, 0.04),
+      0 22px 50px -30px rgba(40, 38, 52, 0.22);
+  }
+
+  /* Gentle hover lift for floating objects. */
+  .lift {
+    transition:
+      transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: transform;
+  }
+
+  .lift:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 2px 6px rgba(40, 38, 52, 0.06),
+      0 36px 66px -32px rgba(40, 38, 52, 0.3);
+  }
+
+  /* Tiny frosted status pill (insight severity). */
+  .glass-pill {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+}
+
+/* Warm paper grain — softer + warmer than the cool homepage grain. */
+.grain-warm {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}

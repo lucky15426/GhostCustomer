@@ -1,0 +1,45 @@
+{
+  "name": "ghost-customer-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The AI that becomes your customer before your customer becomes your problem.",
+  "scripts": {
+    "prebuild": "rimraf .next tsconfig.tsbuildinfo",
+    "dev": "next dev",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@react-pdf/renderer": "^4.5.1",
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.108.2",
+    "baseline-browser-mapping": "^2.10.40",
+    "browserslist": "^4.28.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.15.0",
+    "lodash": "^4.18.1",
+    "lucide-react": "^0.469.0",
+    "next": "^15.5.7",
+    "ogl": "^1.0.11",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "recharts": "^2.15.0",
+    "tailwind-merge": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
+    "postcss": "^8.5.1",
+    "rimraf": "^5.0.5",
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.7.3"
+  }
+}
