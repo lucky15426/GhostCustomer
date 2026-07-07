@@ -11,7 +11,7 @@
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres-3FCF8E?logo=supabase&logoColor=white)
 ![Firecrawl](https://img.shields.io/badge/Firecrawl-crawl_+_screenshot-FF7A00)
 
-Live demo: https://ghost-ai-omega.vercel.app
+Live demo: https://www.ghostcustomer.in/
 
 ---
 
